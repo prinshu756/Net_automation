@@ -1,0 +1,90 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "vendor": {
+      "type": "string",
+      "description": "Vendor name as detected (e.g., 'cisco', 'juniper', 'arista', 'paloalto')"
+    },
+    "hostname": { "type": "string" },
+    "os_version": { "type": "string" },
+    "management": {
+      "type": "object",
+      "properties": {
+        "ssh_version": { "type": "integer" },
+        "telnet_enabled": { "type": "boolean" },
+        "http_enabled": { "type": "boolean" },
+        "https_enabled": { "type": "boolean" },
+        "snmp": {
+          "type": "object",
+          "properties": {
+            "version": { "type": "string", "enum": ["v1", "v2c", "v3"] },
+            "community_strings": { "type": "array", "items": { "type": "string" } }
+          }
+        }
+      }
+    },
+    "authentication": {
+      "type": "object",
+      "properties": {
+        "aaa_methods": { "type": "array", "items": { "type": "string" } },
+        "password_encryption": { "type": "string", "enum": ["plain", "md5", "sha256", "scrypt"] }
+      }
+    },
+    "logging": {
+      "type": "object",
+      "properties": {
+        "remote_servers": { "type": "array", "items": { "type": "string" } },
+        "local_buffered": { "type": "boolean" }
+      }
+    },
+    "ntp": {
+      "type": "object",
+      "properties": {
+        "servers": { "type": "array", "items": { "type": "string" } },
+        "authenticated": { "type": "boolean" }
+      }
+    },
+    "routing": {
+      "type": "object",
+      "properties": {
+        "protocols": {
+          "type": "array",
+          "items": { "type": "string", "enum": ["ospf", "bgp", "eigrp", "rip"] }
+        },
+        "authentication": {
+          "type": "object",
+          "properties": {
+            "ospf": { "type": "boolean" },
+            "bgp": { "type": "boolean" }
+          }
+        }
+      }
+    },
+    "interfaces": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "admin_down": { "type": "boolean" },
+          "cdp_enabled": { "type": "boolean" },
+          "lldp_enabled": { "type": "boolean" }
+        }
+      }
+    },
+    "banners": {
+      "type": "object",
+      "properties": {
+        "motd": { "type": "string" },
+        "login": { "type": "string" }
+      }
+    },
+    "raw_commands": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "All commands not yet mapped to the above fields – used for the training loop."
+    }
+  },
+  "required": ["vendor", "hostname"]
+}

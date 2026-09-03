@@ -1,0 +1,25 @@
+hostname Core-SW-01
+!
+ip ssh version 2
+!
+line vty 0 4
+ transport input ssh
+!
+logging host 10.0.0.5
+logging buffered 4096
+!
+enable secret type7 0102030405060708
+username admin secret type7 0102030405060709
+!
+banner motd #Unauthorized access prohibited#
+!
+ip http server
+!
+snmp-server community public ro
+!
+no cdp run
+!
+ntp server 10.0.0.1
+!
+! Some unknown command for training:
+crypto isakmp policy 10

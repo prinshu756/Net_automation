@@ -1,0 +1,17 @@
+{
+  "vendor": "cisco",
+  "model": "qwen2.5:0.5b",
+  "temperature": 0,
+  "format": "json",
+  "system_prompt": "You are a network security expert. Given a configuration file from any vendor, normalize it into the provided generic schema. Map vendor-specific commands to the corresponding fields. If a command does not fit any field, place it in 'raw_commands'. Output ONLY valid JSON.",
+  "output_schema": "normalized_schema.json",
+  "reinforcement_prompt_template": "Hey you have given some set of rules to be used in parsing the input. With this set of rules, we expect the user to follow the rules in the order they are given. If the user does not follow the rules, the system will not parse the input.",
+  "vendor_detection": {
+    "keywords": {
+      "cisco": ["Cisco", "IOS", "IOS-XE", "Nexus"],
+      "juniper": ["JUNOS", "SRX", "EX", "MX"],
+      "arista": ["Arista", "EOS"],
+      "paloalto": ["Palo Alto", "PAN-OS"]
+    }
+  }
+}

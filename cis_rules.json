@@ -1,0 +1,82 @@
+[
+  {
+    "id": "CIS-1.1.2",
+    "framework": "CIS",
+    "name": "SSH version 2 or higher",
+    "field": "management.ssh_version",
+    "operator": "ge",
+    "expected": 2,
+    "severity": "High",
+    "level": "Level 1"
+  },
+  {
+    "id": "CIS-1.1.3",
+    "framework": "CIS",
+    "name": "Telnet disabled",
+    "field": "management.telnet_enabled",
+    "operator": "eq",
+    "expected": false,
+    "severity": "High",
+    "level": "Level 1"
+  },
+  {
+    "id": "CIS-1.5.1",
+    "framework": "CIS",
+    "name": "Logging configured (remote or local)",
+    "field": "logging",
+    "operator": "exists",
+    "expected": true,
+    "severity": "Medium",
+    "level": "Level 1"
+  },
+  {
+    "id": "CIS-1.6.1",
+    "framework": "CIS",
+    "name": "NTP configured",
+    "field": "ntp.servers",
+    "operator": "non_empty",
+    "expected": true,
+    "severity": "Medium",
+    "level": "Level 1"
+  },
+  {
+    "id": "CIS-2.1.1",
+    "framework": "CIS",
+    "name": "HTTP server disabled",
+    "field": "management.http_enabled",
+    "operator": "eq",
+    "expected": false,
+    "severity": "High",
+    "level": "Level 1"
+  },
+  {
+    "id": "CIS-3.1.1",
+    "framework": "CIS",
+    "name": "AAA authentication configured (RADIUS/TACACS+)",
+    "field": "authentication.aaa_methods",
+    "operator": "contains_any",
+    "expected": ["radius", "tacacs+"],
+    "severity": "High",
+    "level": "Level 1"
+  },
+  {
+    "id": "CIS-3.2.2",
+    "framework": "CIS",
+    "name": "Password encryption SHA256/scrypt",
+    "field": "authentication.password_encryption",
+    "operator": "in",
+    "expected": ["sha256", "scrypt"],
+    "severity": "High",
+    "level": "Level 2"
+  },
+  {
+    "id": "CIS-4.1.1",
+    "framework": "CIS",
+    "name": "No default SNMP communities",
+    "field": "management.snmp.community_strings",
+    "operator": "not_contains_any",
+    "expected": ["public", "private"],
+    "severity": "Medium",
+    "level": "Level 1"
+  }
+]

@@ -1,0 +1,64 @@
+{
+  "vendor": "juniper",
+  "hostname": "SRX-01",
+  "os_version": "OSX 10.12",
+  "management": {
+    "ssh_version": 2,
+    "telnet_enabled": true,
+    "http_enabled": true,
+    "https_enabled": true,
+    "snmp": {
+      "version": "v3",
+      "community_strings": [
+        "public",
+        "private"
+      ]
+    }
+  },
+  "authentication": {
+    "aaa_methods": [
+      "password",
+      "md5"
+    ],
+    "password_encryption": "public"
+  },
+  "logging": {
+    "remote_servers": [
+      "10.0.0.5",
+      "10.0.0.6"
+    ],
+    "local_buffered": false
+  },
+  "ntp": {
+    "servers": [
+      "10.0.0.1"
+    ],
+    "authenticated": false
+  },
+  "routing": {
+    "protocols": [
+      "ospf",
+      "bgp",
+      "eigrp",
+      "rip"
+    ],
+    "authentication": {
+      "ospf": true,
+      "bgp": true
+    }
+  },
+  "interfaces": [
+    {
+      "name": "ge-0/0/0",
+      "admin_down": true,
+      "cdp_enabled": false,
+      "lldp_enabled": false
+    },
+    {
+      "name": "ge-0/0/1",
+      "admin_down": false,
+      "cdp_enabled": false,
+      "lldp_enabled": false
+    }
+  ]
+}

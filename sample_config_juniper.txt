@@ -1,0 +1,37 @@
+set system host-name SRX-01
+set system domain-name college.local
+set system time-zone Asia/Kolkata
+
+# Management SSH (good - but syntax is Juniper-specific)
+set system services ssh protocol-version v2
+
+# Telnet (bad - should be disabled)
+set system services telnet
+
+# User accounts (password type 9 for SHA256)
+set system login user admin class super-user
+set system login user admin authentication encrypted-password "$6$abc123$..."
+
+# Banner (good)
+set system login message "Unauthorized access prohibited"
+
+# SNMP (bad - default community)
+set snmp community public authorization read-only
+
+# Logging (good)
+set system syslog host 10.0.0.5 any any
+set system syslog file messages any any
+
+# NTP (good)
+set system ntp server 10.0.0.1
+
+# Interfaces (hardening)
+set interfaces ge-0/0/0 unit 0 family inet address 192.168.1.1/24
+set interfaces ge-0/0/1 disable
+
+# Routing (OSPF with authentication)
+set protocols ospf area 0 interface ge-0/0/0 authentication md5 10 key SecureOSPF
+
+# Unknown / advanced command (testing training loop)
+set security policies from-zone trust to-zone untrust policy allow-ssh match source-address any
+set security policies from-zone trust to-zone untrust policy allow-ssh then permit
