@@ -16,7 +16,7 @@
   },
   "authentication": {
     "aaa_methods": [
-      "local"
+      "ssh"
     ],
     "password_encryption": "type7"
   },
@@ -34,7 +34,10 @@
   },
   "routing": {
     "protocols": [],
-    "authentication": {}
+    "authentication": {
+      "ospf": false,
+      "bgp": false
+    }
   },
   "interfaces": [],
   "banners": {

@@ -78,7 +78,9 @@
       "framework": "CIS",
       "name": "AAA authentication configured (RADIUS/TACACS+)",
       "status": "Fail",
-      "actual": [],
+      "actual": [
+        "ssh"
+      ],
       "expected": [
         "radius",
         "tacacs+"

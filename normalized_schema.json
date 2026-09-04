@@ -15,7 +15,7 @@
         "telnet_enabled": { "type": "boolean" },
         "http_enabled": { "type": "boolean" },
         "https_enabled": { "type": "boolean" },
-        "snmp": {
+        "snmp": { 
           "type": "object",
           "properties": {
             "version": { "type": "string", "enum": ["v1", "v2c", "v3"] },

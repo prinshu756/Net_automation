@@ -504,3 +504,104 @@ def main():
 
 if __name__ == "__main__":
     main()
+    
+    
+    
+    
+"""
+ok the thing I noticed is the stream error in ollama if you put $stream : True then following is the output :
+
+with $stream : True
+srv  server_strea: conv_id= (empty=1)
+slot get_availabl: id  0 | task -1 |  - checking sim = 0.002 (3/1262) > 0.100
+slot get_availabl: id  0 | task -1 | selected slot by LRU, t_last = 368189966
+srv  get_availabl: updating prompt cache
+srv   prompt_save:  - saving prompt with length 1562, total state size = 99.093 MiB (draft: 0.000 MiB)
+srv          load:  - looking for better prompt, base f_keep = 0.002, f_sim = 0.002
+srv          load:    - prompt with length    2009, lcp =     159, f_keep = 0.079, f_sim = 0.126
+srv          load:    - prompt with length    1562, lcp =       3, f_keep = 0.002, f_sim = 0.002
+srv          load:    - prompt with length    1562, lcp =       3, f_keep = 0.002, f_sim = 0.002
+srv        update:  - cache state: 3 prompts, 663.011 MiB (limits: 8192.000 MiB, 4096 tokens, 63422 est)
+srv        update:    - prompt 0000021C9701D570:    2009 tokens, checkpoints:  3,   263.822 MiB
+srv        update:    - prompt 0000021C9701D9D0:    1562 tokens, checkpoints:  2,   199.594 MiB
+srv        update:    - prompt 0000021D4AAC8EF0:    1562 tokens, checkpoints:  2,   199.594 MiB
+srv  get_availabl: prompt cache update took 90.82 ms
+slot launch_slot_: id  0 | task -1 | sampler chain: logits -> ?penalties -> ?dry -> ?top-n-sigma -> top-k -> ?typical -> top-p -> ?min-p -> ?xtc -> temp-ext -> dist
+slot launch_slot_: id  0 | task -1 | sampler params:
+        repeat_last_n = 64, repeat_penalty = 1.000, frequency_penalty = 0.000, presence_penalty = 0.000
+        dry_multiplier = 0.000, dry_base = 1.750, dry_allowed_length = 2, dry_penalty_last_n = 64
+        top_k = 40, top_p = 0.900, min_p = 0.000, xtc_probability = 0.000, xtc_threshold = 0.100, typical_p = 1.000, top_n_sigma = -1.000, temp = 0.800
+        mirostat = 0, mirostat_lr = 0.100, mirostat_ent = 5.000, adaptive_target = -1.000, adaptive_decay = 0.900
+slot launch_slot_: id  0 | task 1665 | processing task, is_child = 0
+slot   operator(): id  0 | task 1665 | new prompt, n_ctx_slot = 4096, n_keep = 4, task.n_tokens = 1262
+slot   operator(): id  0 | task 1665 | checking checkpoint with [1145, 1145] against 3...
+slot   operator(): id  0 | task 1665 | checking checkpoint with [637, 637] against 3...
+slot   operator(): id  0 | task 1665 | forcing full prompt re-processing due to lack of cache data (likely due to SWA or hybrid/recurrent memory, see https://github.com/ggml-org/llama.cpp/pull/13194#issuecomment-2868343055)
+slot   operator(): id  0 | task 1665 | erased invalidated context checkpoint (pos_min = 637, pos_max = 637, n_tokens = 638, n_swa = 0, pos_next = 0, size = 50.251 MiB)
+slot   operator(): id  0 | task 1665 | erased invalidated context checkpoint (pos_min = 1145, pos_max = 1145, n_tokens = 1146, n_swa = 0, pos_next = 0, size = 50.251 MiB)
+slot   operator(): id  0 | task 1665 | cached n_tokens = 0, memory_seq_rm [0, end)
+slot   operator(): id  0 | task 1665 | cached n_tokens = 512, memory_seq_rm [512, end)
+slot   operator(): id  0 | task 1665 | cached n_tokens = 750, memory_seq_rm [750, end)
+slot create_check: id  0 | task 1665 | created context checkpoint 1 of 32 (pos_min = 749, pos_max = 749, n_tokens = 750, size = 50.251 MiB)
+slot   operator(): id  0 | task 1665 | cached n_tokens = 1258, memory_seq_rm [1258, end)
+slot init_sampler: id  0 | task 1665 | init sampler, took 0.25 ms, tokens: text = 1262, total = 1262
+slot create_check: id  0 | task 1665 | created context checkpoint 2 of 32 (pos_min = 1257, pos_max = 1257, n_tokens = 1258, size = 50.251 MiB)
+slot print_timing: id  0 | task 1665 | n_gen =    100, tg =  11.80 t/s, tg_3s =  11.92 t/s
+slot print_timing: id  0 | task 1665 | n_gen =    130, tg =  11.16 t/s, tg_3s =   9.45 t/s
+slot print_timing: id  0 | task 1665 | n_gen =    161, tg =  10.74 t/s, tg_3s =   9.30 t/s
+slot print_timing: id  0 | task 1665 | n_gen =    179, tg =   9.90 t/s, tg_3s =   5.83 t/s
+slot print_timing: id  0 | task 1665 | n_gen =    199, tg =   9.43 t/s, tg_3s =   6.62 t/s
+slot print_timing: id  0 | task 1665 | n_gen =    219, tg =   9.05 t/s, tg_3s =   6.52 t/s
+slot print_timing: id  0 | task 1665 | n_gen =    239, tg =   8.78 t/s, tg_3s =   6.61 t/s
+slot print_timing: id  0 | task 1665 | n_gen =    259, tg =   8.56 t/s, tg_3s =   6.62 t/s
+slot print_timing: id  0 | task 1665 | n_gen =    279, tg =   8.38 t/s, tg_3s =   6.59 t/s
+slot print_timing: id  0 | task 1665 | prompt eval time =    2210.24 ms /  1262 tokens (    1.75 ms per token,   570.98 tokens per second)
+slot print_timing: id  0 | task 1665 |        eval time =   34720.13 ms /   289 tokens (  120.56 ms per token,     8.29 tokens per second)
+slot print_timing: id  0 | task 1665 |       total time =   36930.37 ms /  1551 tokens
+slot print_timing: id  0 | task 1665 |    graphs reused =       1921
+slot      release: id  0 | task 1665 | stop processing: n_tokens = 1550, truncated = 0
+srv  update_slots: all slots are idle
+
+
+
+
+with $stream : False 
+
+srv  server_strea: conv_id= (empty=1)
+slot get_availabl: id  0 | task -1 |  - checking sim = 1.000 (1262/1262) > 0.100
+slot get_availabl: id  0 | task -1 | selected slot by LCP similarity, f_sim_best = 1.000 (> 0.100 thold), f_keep = 0.814
+slot launch_slot_: id  0 | task -1 | sampler chain: logits -> ?penalties -> ?dry -> ?top-n-sigma -> top-k -> ?typical -> top-p -> ?min-p -> ?xtc -> temp-ext -> dist
+slot launch_slot_: id  0 | task -1 | sampler params:
+        repeat_last_n = 64, repeat_penalty = 1.000, frequency_penalty = 0.000, presence_penalty = 0.000
+        dry_multiplier = 0.000, dry_base = 1.750, dry_allowed_length = 2, dry_penalty_last_n = 64
+        top_k = 40, top_p = 0.900, min_p = 0.000, xtc_probability = 0.000, xtc_threshold = 0.100, typical_p = 1.000, top_n_sigma = -1.000, temp = 0.800
+        mirostat = 0, mirostat_lr = 0.100, mirostat_ent = 5.000, adaptive_target = -1.000, adaptive_decay = 0.900
+slot launch_slot_: id  0 | task 1958 | processing task, is_child = 0
+slot   operator(): id  0 | task 1958 | new prompt, n_ctx_slot = 4096, n_keep = 4, task.n_tokens = 1262
+slot   operator(): id  0 | task 1958 | checking checkpoint with [1257, 1257] against 1261...
+slot   operator(): id  0 | task 1958 | restored context checkpoint (pos_min = 1257, pos_max = 1257, n_tokens = 1258, n_past = 1258, size = 50.251 MiB)
+slot   operator(): id  0 | task 1958 | cached n_tokens = 1258, memory_seq_rm [1258, end)
+slot init_sampler: id  0 | task 1958 | init sampler, took 0.27 ms, tokens: text = 1262, total = 1262
+slot create_check: id  0 | task 1958 | erasing context checkpoint too close to an earlier one (pos_min = 1257, pos_max = 1257, n_tokens = 1258, size = 50.251 MiB)
+slot create_check: id  0 | task 1958 | created context checkpoint 2 of 32 (pos_min = 1257, pos_max = 1257, n_tokens = 1258, size = 50.251 MiB)
+slot print_timing: id  0 | task 1958 | n_gen =    100, tg =  15.44 t/s, tg_3s =  15.59 t/s
+slot print_timing: id  0 | task 1958 | n_gen =    120, tg =  12.56 t/s, tg_3s =   6.53 t/s
+slot print_timing: id  0 | task 1958 | n_gen =    138, tg =  10.95 t/s, tg_3s =   5.93 t/s
+slot print_timing: id  0 | task 1958 | n_gen =    156, tg =   9.89 t/s, tg_3s =   5.70 t/s
+slot print_timing: id  0 | task 1958 | n_gen =    176, tg =   9.33 t/s, tg_3s =   6.49 t/s
+slot print_timing: id  0 | task 1958 | n_gen =    196, tg =   8.95 t/s, tg_3s =   6.59 t/s
+slot print_timing: id  0 | task 1958 | n_gen =    216, tg =   8.65 t/s, tg_3s =   6.54 t/s
+slot print_timing: id  0 | task 1958 | n_gen =    236, tg =   8.43 t/s, tg_3s =   6.59 t/s
+slot print_timing: id  0 | task 1958 | n_gen =    256, tg =   8.25 t/s, tg_3s =   6.57 t/s
+slot print_timing: id  0 | task 1958 | n_gen =    276, tg =   8.10 t/s, tg_3s =   6.59 t/s
+slot print_timing: id  0 | task 1958 | prompt eval time =     433.53 ms /     4 tokens (  108.38 ms per token,     9.23 tokens per second)
+slot print_timing: id  0 | task 1958 |        eval time =   36295.51 ms /   291 tokens (  125.16 ms per token,     7.99 tokens per second)
+slot print_timing: id  0 | task 1958 |       total time =   36729.04 ms /   295 tokens
+slot print_timing: id  0 | task 1958 |    graphs reused =       2208
+slot      release: id  0 | task 1958 | stop processing: n_tokens = 1552, truncated = 0
+srv  update_slots: all slots are idle
+
+
+so for the best option put $stream : False in the call_ollama() function
+ 
+"""
