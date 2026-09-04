@@ -7,10 +7,6 @@
         "editorIndentGuide.activeBackground1": "#7DCFFF28",
         "editor.selectionBackground": "#7DCFFF22",
         "editorBracketHighlight.foreground1": "#7DCFFF",
-        "editorBracketHighlight.foreground2": "#A0E9FF",
-        "tab.activeBorder": "#7DCFFF25",
-        "tab.activeBackground": "#121A2C",
-        "statusBar.background": "#121A2C",
-        "statusBar.foreground": "#7DCFFF"
+        "editorBracketHighlight.foreground2": "#A0E9FF"
     }
 }

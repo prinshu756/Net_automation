@@ -254,7 +254,7 @@ def execute_with_delay(connection, commands: List[str], delay_seconds: int = 5):
         print("No commands to execute.")
         return
     
-    print(f"\n⚠️  WARNING: About to execute {len(commands)} commands on the device.")
+    print(f"\ WARNING: About to execute {len(commands)} commands on the device.")
     print("Commands to execute:")
     for cmd in commands:
         print(f"  {cmd}")
@@ -286,7 +286,7 @@ def print_report(report: Dict):
     print(f"Total rules: {s['total']} | Passed: {s['passed']} | Failed: {s['failed']} | Critical High: {s['critical_high']}")
     print("-"*60)
     for r in report["results"]:
-        icon = "✅ PASS" if r["status"] == "Pass" else "❌ FAIL" if r["status"] == "Fail" else "⚠️ UNKN"
+        icon = " PASS" if r["status"] == "Pass" else " FAIL" if r["status"] == "Fail" else "⚠️ UNKN"
         print(f"{icon} {r['rule_id']} ({r['framework']})")
         print(f"   Name: {r['name']}")
         if r["status"] != "Pass":
