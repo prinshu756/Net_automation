@@ -1,15 +1,17 @@
-Net_automation 
+Hey its prinshu welcome to this repo 
 
-git clone karo 
-then go to the cloned folder 
+Firstly you need something to run this 
+1. A local llm
+2. python environment
+3. Atleast 4gb vram or any unified memory 
+4. Netmiko for doing router type stuff
 
-open terminal 
+``` git clone https://github.com/prinshu756/net_automation```
+
+navigate to the folder where you clone it 
+
+Open terminal and run the command 
 
 ```python run_compliance.py```
 
-choose the option :
-
-1. Enter config file
-2. use router ssh
-
-then proceed
+* you are ready to go now

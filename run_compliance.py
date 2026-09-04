@@ -56,9 +56,8 @@ def fetch_config_from_router(ip: str, username: str, password: str = None, key_f
         sys.exit(1)
 
 
-# ============================================================
 # 2. CONFIG THE NORMALIZED ONE (LLM Normalization)
-# ============================================================
+
 def call_ollama(model: str, prompt: str, temperature: float = 0.0) -> Dict:
     url = "http://localhost:11434/api/generate"
     payload = {
@@ -91,20 +90,99 @@ def normalize_config(config_text: str, instructions: Dict) -> Dict:
 
 # 3. Checking if config file is right or not (Validation)
 def validate_normalized_json(data: Dict, schema: Dict) -> tuple:
-    """Returns (is_valid, list_of_errors)."""
+    """
+    Strict validation that checks:
+    1. All required fields exist at ALL levels
+    2. Data types match the schema
+    3. No unexpected fields
+    """
     errors = []
+    
+    # 1. Check top-level required fields
     required_fields = ["vendor", "hostname"]
     for field in required_fields:
         if field not in data:
-            errors.append(f"Missing required field: '{field}'")
+            errors.append(f"Missing required top-level field: '{field}'")
+        elif not data[field] or len(str(data[field]).strip()) == 0:
+            errors.append(f"Field '{field}' is empty")
     
-    # Check if all required schema properties exist (basic check)
+    # 2. Check vendor is valid
+    valid_vendors = ["cisco", "juniper", "arista", "paloalto", "unknown"]
+    if "vendor" in data and data["vendor"] not in valid_vendors:
+        errors.append(f"Invalid vendor: '{data['vendor']}'. Must be one of {valid_vendors}")
+    
+    # 3. Check schema properties recursively
     if "properties" in schema:
-        for prop, details in schema["properties"].items():
-            if details.get("required") and prop not in data:
-                errors.append(f"Missing schema property: '{prop}'")
+        for prop_name, prop_schema in schema["properties"].items():
+            # Skip optional fields
+            if prop_name not in data:
+                continue
+            
+            actual_value = data[prop_name]
+            expected_type = prop_schema.get("type")
+            
+            # Type checking
+            if expected_type:
+                type_mapping = {
+                    "string": str,
+                    "integer": int,
+                    "boolean": bool,
+                    "array": list,
+                    "object": dict
+                }
+                expected_python_type = type_mapping.get(expected_type)
+                if expected_python_type and not isinstance(actual_value, expected_python_type):
+                    errors.append(f"Field '{prop_name}' should be type '{expected_type}', got '{type(actual_value).__name__}'")
+            
+            # Recursively check nested objects
+            if expected_type == "object" and isinstance(actual_value, dict):
+                if "properties" in prop_schema:
+                    sub_errors = validate_nested_object(prop_name, actual_value, prop_schema["properties"])
+                    errors.extend(sub_errors)
+    
+    # 4. Check for raw_commands - if too many, it's a normalization failure
+    raw_commands = data.get("raw_commands", [])
+    total_fields = len(data)
+    if raw_commands and len(raw_commands) > total_fields * 0.5:  # >50% of fields are raw
+        errors.append(f"Too many unmapped commands: {len(raw_commands)} raw commands. LLM failed to normalize properly.")
     
     return len(errors) == 0, errors
+
+
+def validate_nested_object(parent_name: str, data: Dict, properties: Dict) -> List[str]:
+    """
+    Recursively validate nested objects.
+    """
+    errors = []
+    for prop_name, prop_schema in properties.items():
+        if prop_name not in data:
+            # Check if it's required
+            if prop_schema.get("required", False):
+                errors.append(f"Missing required field: '{parent_name}.{prop_name}'")
+            continue
+        
+        actual_value = data[prop_name]
+        expected_type = prop_schema.get("type")
+        
+        if expected_type:
+            type_mapping = {
+                "string": str,
+                "integer": int,
+                "boolean": bool,
+                "array": list,
+                "object": dict
+            }
+            expected_python_type = type_mapping.get(expected_type)
+            if expected_python_type and not isinstance(actual_value, expected_python_type):
+                errors.append(f"Field '{parent_name}.{prop_name}' should be type '{expected_type}', got '{type(actual_value).__name__}'")
+        
+        # Recursively check nested objects
+        if expected_type == "object" and isinstance(actual_value, dict):
+            if "properties" in prop_schema:
+                sub_errors = validate_nested_object(f"{parent_name}.{prop_name}", actual_value, prop_schema["properties"])
+                errors.extend(sub_errors)
+    
+    return errors
 
 
 # 4. RE_inforcement prompt engg (when the configf fails the validation)
@@ -295,7 +373,7 @@ def print_report(report: Dict):
 
 def main():
     print("\n" + "="*60)
-    print("CIS COMPLIANCE ENGINE (Data Flow: Diagram)")
+    print("CIS COMPLIANCE ENGINE")
     print("="*60)
     
     # taking user input and proceeding 
@@ -342,18 +420,27 @@ def main():
     # 4. RE-inforcemnt prompt engg (If NO)
     if not is_valid:
         print("\n[Validation] Config file is NOT valid.")
-        print("Errors:", errors)
-        
+        print(f"Found {len(errors)} errors:")
+        for err in errors:
+            print(f"  - {err}")
+    
+    # DEBUG: Print what the LLM actually returned
+        print("\n[DEBUG] LLM returned normalized data:")
+        print(json.dumps(normalized_data, indent=2))
+    
         retry_count = 0
         max_retries = 2
         while retry_count < max_retries and not is_valid:
-            print(f"\n Reinforcement Prompt Engineering Attempt {retry_count + 1} ")
+            print(f"\n--- Reinforcement Prompt Engineering Attempt {retry_count + 1} ---")
             normalized_data = reinforcement_prompt_engineering(config_text, errors, instructions)
             is_valid, errors = validate_normalized_json(normalized_data, schema)
             retry_count += 1
-        
+    
         if not is_valid:
-            print(" Failed to normalize after retries. Exiting.")
+            print("\Failed to normalize after retries. Exiting.")
+            print("Final validation errors:")
+            for err in errors:
+                print(f"  - {err}")
             sys.exit(1)
     
     # Save the normalized output

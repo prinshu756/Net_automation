@@ -1,33 +1,30 @@
 {
-  "vendor": "juniper",
-  "hostname": "SRX-01",
-  "os_version": "OSX 10.12",
+  "vendor": "cisco",
+  "hostname": "Core-SW-01",
+  "os_version": "",
   "management": {
     "ssh_version": 2,
-    "telnet_enabled": true,
+    "telnet_enabled": false,
     "http_enabled": true,
-    "https_enabled": true,
+    "https_enabled": false,
     "snmp": {
-      "version": "v3",
+      "version": "v2c",
       "community_strings": [
-        "public",
-        "private"
+        "public"
       ]
     }
   },
   "authentication": {
     "aaa_methods": [
-      "password",
-      "md5"
+      "local"
     ],
-    "password_encryption": "public"
+    "password_encryption": "type7"
   },
   "logging": {
     "remote_servers": [
-      "10.0.0.5",
-      "10.0.0.6"
+      "10.0.0.5"
     ],
-    "local_buffered": false
+    "local_buffered": true
   },
   "ntp": {
     "servers": [
@@ -36,29 +33,15 @@
     "authenticated": false
   },
   "routing": {
-    "protocols": [
-      "ospf",
-      "bgp",
-      "eigrp",
-      "rip"
-    ],
-    "authentication": {
-      "ospf": true,
-      "bgp": true
-    }
+    "protocols": [],
+    "authentication": {}
   },
-  "interfaces": [
-    {
-      "name": "ge-0/0/0",
-      "admin_down": true,
-      "cdp_enabled": false,
-      "lldp_enabled": false
-    },
-    {
-      "name": "ge-0/0/1",
-      "admin_down": false,
-      "cdp_enabled": false,
-      "lldp_enabled": false
-    }
+  "interfaces": [],
+  "banners": {
+    "motd": "#Unauthorized access prohibited#",
+    "login": ""
+  },
+  "raw_commands": [
+    "crypto isakmp policy 10"
   ]
 }

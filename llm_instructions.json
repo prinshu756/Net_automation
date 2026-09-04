@@ -1,6 +1,6 @@
 {
   "vendor": "cisco",
-  "model": "qwen2.5:0.5b",
+  "model": "hf.co/empero-ai/Qwen3.8-4B-Distill-GGUF:Q4_K_M",
   "temperature": 0,
   "format": "json",
   "system_prompt": "You are a network security expert. Given a configuration file from any vendor, normalize it into the provided generic schema. Map vendor-specific commands to the corresponding fields. If a command does not fit any field, place it in 'raw_commands'. Output ONLY valid JSON.",
